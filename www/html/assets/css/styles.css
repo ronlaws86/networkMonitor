@@ -1,0 +1,148 @@
+
+h4 {
+	margin-top: 0px !important;
+	margin-bottom: -10px !important;
+	margin: 0 !important;
+}
+.inner {
+	padding: 10px 0px 5px 0px;
+    	margin-bottom: -10px;    
+}
+.inner span {
+    margin-top: 5px;
+}
+@font-face {
+  font-family: 'Glyphicons Halflings';
+
+  src: url('fonts/glyphicons-halflings-regular.eot');
+  src: url('fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('fonts/glyphicons-halflings-regular.woff') format('woff'), url('fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+}
+
+.row {
+	margin-left: 0px !important;
+	margin-right: 0px !important;
+}
+
+@font-face {
+    font-family: 'BebasNeueRegular';
+    src: url('fonts/BebasNeue-webfont.eot');
+    src: url('fonts/BebasNeue-webfont.eot?#iefix') format('opentype'),
+         url('fonts/BebasNeue-webfont.woff') format('woff'),
+         url('fonts/BebasNeue-webfont.ttf') format('truetype'),
+         url('BebasNeue-webfont.svg#BebasNeueRegular') format('svg');
+    font-weight: normal;
+    font-style: normal;
+}
+
+.container {
+    width: auto;
+    margin: 0 auto;
+    overflow: hidden;
+}
+
+.clock {
+    width: 100%;
+    margin: 0 auto;
+/*    padding: 30px;*/
+/*    border: 1px solid #333;*/
+    color: #fff;
+}
+
+#Date {
+    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    font-size: 20px;
+    text-align: center;
+    text-shadow: 0 0 5px #00c6ff;
+}
+
+ul {
+    width: 100%;
+    margin: 0 auto;
+    padding: 0px;
+    list-style: none;
+    text-align: center;
+}
+
+ul li {
+    display: inline;
+    font-size: 50px;
+    text-align: center;
+    font-family: 'BebasNeueRegular', Arial, Helvetica, sans-serif;
+    text-shadow: 0 0 5px #00c6ff;
+}
+
+#point {
+    position: relative;
+    -moz-animation: mymove 1s ease infinite;
+    -webkit-animation: mymove 1s ease infinite;
+/*
+    padding-left: 10px;
+    padding-right: 10px;
+*/
+}
+
+/* Simple Animation */
+@-webkit-keyframes mymove {
+    0% {opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+}
+
+50% {
+    opacity: 0;
+    text-shadow: none;
+}
+
+100% {
+    opacity: 1.0;
+    text-shadow: 0 0 20px #00c6ff;
+}	
+}
+
+@-moz-keyframes mymove {
+    0% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    }
+
+    50% {
+        opacity: 0;
+        text-shadow: none;
+    }
+
+    100% {
+        opacity: 1.0;
+        text-shadow: 0 0 20px #00c6ff;
+    };
+}
+
+@keyframes alert {
+    from {background-color: red;}
+    to {background-color: orange;}
+}
+
+.red {
+
+    animation-name: alert;
+    animation-duration: 1s;
+	animation-iteration-count: infinite;
+	animation-direction: alternate;
+}
+.red strong {
+    visibility: visible;
+}
+
+.green {
+	background: #0a550a;
+}
+
+.error {
+    -webkit-box-shadow: 0px 0px 10px 5px rgba(255,119,0,1);
+    -moz-box-shadow: 0px 0px 10px 5px rgba(255,119,0,1);
+    box-shadow:0px 0px 10px 5px rgba(255,119,0,1);
+    background-color: rgba(255,119,0,1);
+
+}
+
+.ok {
+    transition: visibility 0s linear 300ms, opacity 300ms;
+}
