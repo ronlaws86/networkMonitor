@@ -1,189 +1,248 @@
+<?php
+
+/**
+ * Raspbian WiFi Configuration Portal
+ *
+ * Enables use of simple web interface rather than SSH to control wifi and hostapd on the Raspberry Pi.
+ * Recommended distribution is Raspbian Server Edition. Specific instructions to install the supported software are
+ * in the README and original post by @SirLagz. For a quick run through, the packages required for the WebGUI are:
+ * lighttpd (I have version 1.4.31-2 installed via apt)
+ * php5-cgi (I have version 5.4.4-12 installed via apt)
+ * along with their supporting packages, php5 will also need to be enabled.
+ * 
+ * @author     Lawrence Yau <sirlagz@gmail.com>
+ * @author     Bill Zimmerman <billzimmerman@gmail.com>
+ * @license    GNU General Public License, version 3 (GPL-3.0)
+ * @version    1.3.0
+ * @link       https://github.com/billz/raspap-webgui
+ * @see        http://sirlagz.net/2013/02/08/raspap-webgui/
+ */
+
+include_once( 'includes/config.php' );
+include_once( RASPI_CONFIG.'/raspap.php' );
+include_once( 'includes/functions.php' );
+include_once( 'includes/dashboard.php' );
+include_once( 'includes/authenticate.php' );
+include_once( 'includes/admin.php' );
+include_once( 'includes/dhcp.php' );
+include_once( 'includes/hostapd.php' );
+include_once( 'includes/system.php' );
+include_once( 'includes/configure_client.php' );
+include_once( 'includes/networking.php' );
+include_once( 'includes/themes.php' );
+include_once( 'includes/url.php' );
+$output = $return = 0;
+$page = $_GET['page'];
+
+session_start();
+if (empty($_SESSION['csrf_token'])) {
+    if (function_exists('mcrypt_create_iv')) {
+        $_SESSION['csrf_token'] = bin2hex(mcrypt_create_iv(32, MCRYPT_DEV_URANDOM));
+    } else {
+        $_SESSION['csrf_token'] = bin2hex(openssl_random_pseudo_bytes(32));
+    }
+}
+$csrf_token = $_SESSION['csrf_token'];
+
+if(!isset($_COOKIE['theme'])) {
+    $theme = "custom.css";
+} else {
+    $theme = $_COOKIE['theme'];
+}
+$theme_url = 'dist/css/' . $theme;
+?>
+
 <!DOCTYPE html>
-<html style="background:black;">
-
-<head>
+<html lang="en">
+  <head>
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Network Status</title>
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic">
-    <link rel="stylesheet" href="assets/css/styles.css">
-</head>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-<body style="background:black;">
-    <div id="topbar" class="row green">
-        <div class="col-md-10">
-            <h1>Network Status<strong id="alert" style="visibility: hidden;"> - OUTAGE DETECTED!!!</strong></h1></div>
-        <div class="col-md-2">
-        <div class="clock">
-			<div id="Date"></div>
-			  <ul>
-				  <li id="hours"></li>
-				  <li id="point">:</li>
-				  <li id="min"></li>
-				  <li id="point">:</li>
-				  <li id="sec"></li>
-			  </ul>
-		</div>
-		</div>
-    </div>
-    <div id="hosts" style="padding-top: 10px;">
-        <div>
-            <div class="row">
-				
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Site 1</h3>
-						</div>
-					<div class="panel-body">
-						<!-- Hosts -->
-						<div id="11"></div>
-						<div id="12"></div>
-						<div id="13"></div>
-						<div id="14"></div>     
-						<!-- End Hosts -->
-					</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Site 2</h3>
-						</div>
-					<div class="panel-body">
-						<!-- Hosts -->
-						<div id="21"></div>
-						<div id="22"></div>
-						<div id="23"></div>  
-						<div id="24"></div>  
-						<!-- End Hosts -->
-					</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Site 3</h3>
-						</div>
-					<div class="panel-body">
-						<!-- Hosts -->
-						<div id="31"></div>
-						<div id="32"></div>
-						<div id="33"></div>
-						                
-						<!-- End Hosts -->
-					</div>
-					</div>
-				</div>
-				<div class="col-md-3">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Site 4</h3>
-						</div>
-					<div class="panel-body">
-						<!-- Hosts -->
-						<div id="41"></div>
-						<div id="42"></div>
-						<div id="43"></div>
-						
-						                
-						<!-- End Hosts -->
-					</div>
-					</div>
-				</div>
-				<div class="col-md-12">
-					<div class="panel panel-default">
-						<div class="panel-heading">
-							<h3 class="panel-title">Site 5</h3>
-						</div>
-					<div class="panel-body">
-						<div class="col-md-3">
-						<!-- Hosts -->
-						<div id="51a"></div>
-						<div id="52a"></div>
-						<div id="53a"></div>
-						<div id="54a"></div>
+    <title>Raspbian WiFi Configuration Portal</title>
 
-						<!-- End Hosts -->							
-						</div>
-						<div class="col-md-3">
-						<!-- Hosts -->
-						<div id="51b"></div>
-						<div id="52b"></div>
-						<div id="53b"></div>
-						<div id="54b"></div>
-						<div id="55b"></div>
+    <!-- Bootstrap Core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
+    <!-- MetisMenu CSS -->
+    <link href="vendor/metisMenu/metisMenu.min.css" rel="stylesheet">
 
-						<!-- End Hosts -->
-						</div>
-						<div class="col-md-3">
-						<!-- Hosts -->
-						<div id="51c"></div>
-						<div id="52c"></div>
-						<div id="53c"></div>
-						<div id="54c"></div>
-						<div id="55c"></div>
-                        <div id="56c"></div>
+    <!-- Timeline CSS -->
+    <link href="dist/css/timeline.css" rel="stylesheet">
 
-						<!-- End Hosts -->
-						</div>
-						<div class="col-md-3">
-						<!-- Hosts -->
-							<div id="51d"></div>	
-							<div id="52d"></div>
-							<div id="53d"></div>
-							<div id="54d"></div>
-							<div id="55d"></div>
-						<!-- End Hosts -->
-						</div>
-						</div>
-					</div>
-					</div>
-				</div>
-            </div>
+    <!-- Custom CSS -->
+    <link href="dist/css/sb-admin-2.min.css" rel="stylesheet">
+
+    <!-- Morris Charts CSS -->
+    <link href="vendor/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+    <!-- Custom CSS -->
+    <link href="<?php echo $theme_url; ?>" title="main" rel="stylesheet">
+
+    <link rel="shortcut icon" type="image/png" href="../img/favicon.png">
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+        <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+        <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+
+    <div id="wrapper">
+      <!-- Navigation -->
+      <nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+        <div class="navbar-header">
+          <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+            <span class="sr-only">Toggle navigation</span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </button>
+          <a class="navbar-brand" href="index.php">RaspAP Wifi Portal v1.3.0</a>
         </div>
-    </div>
-    <script src="assets/js/jquery.min.js"></script>
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-	<script src="assets/js/custom.js"></script>
-	<script type="text/javascript">
-		$(document).ready(function() {
-// Create two variable with the names of the months and days in an array
-var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]; 
-var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+        <!-- /.navbar-header -->
 
-// Create a newDate() object
-setInterval( function() {
-	var newDate = new Date();
-	// Extract the current date from Date object
-	newDate.setDate(newDate.getDate());
-	// Output the day, date, month and year   
-	$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
-	},1000);
-setInterval( function() {
-	// Create a newDate() object and extract the seconds of the current time on the visitor's
-	var seconds = new Date().getSeconds();
-	// Add a leading zero to seconds value
-	$("#sec").html(( seconds < 10 ? "0" : "" ) + seconds);
-	},1000);
-	
-setInterval( function() {
-	// Create a newDate() object and extract the minutes of the current time on the visitor's
-	var minutes = new Date().getMinutes();
-	// Add a leading zero to the minutes value
-	$("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
-    },1000);
-	
-setInterval( function() {
-	// Create a newDate() object and extract the hours of the current time on the visitor's
-	var hours = new Date().getHours();
-	// Add a leading zero to the hours value
-	$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
-    }, 1000);	
-});
-	</script>
-</body>
+        <!-- Navigation -->
+        <div class="navbar-default sidebar" role="navigation">
+          <div class="sidebar-nav navbar-collapse">
+            <ul class="nav" id="side-menu">
+              <li>
+                <a href="index.php?page=wlan0_info"><i class="fa fa-dashboard fa-fw"></i> Dashboard</a>
+              </li>
+              <li>
+                <a href="index.php?page=wpa_conf"><i class="fa fa-signal fa-fw"></i> Configure WiFi Client</a>
+              </li>
+              <?php if ( RASPI_HOTSPOT_ENABLED ) : ?>
+              <li>
+                <a href="index.php?page=hostapd_conf"><i class="fa fa-dot-circle-o fa-fw"></i> Configure Hotspot</a>
+              </li>
+              <?php endif; ?>
+              <?php if ( RASPI_NETWORK_ENABLED ) : ?>
+              <li>
+                <a href="index.php?page=network_conf"><i class="fa fa-sitemap fa-fw"></i> Configure Networking</a>
+              </li> 
+              <?php endif; ?>
+              <?php if ( RASPI_DHCP_ENABLED ) : ?>
+              <li>
+                <a href="index.php?page=dhcpd_conf"><i class="fa fa-exchange fa-fw"></i> Configure DHCP Server</a>
+              </li>
+              <?php endif; ?>
+              <?php if ( RASPI_OPENVPN_ENABLED ) : ?>
+              <li>
+                <a href="index.php?page=openvpn_conf"><i class="fa fa-lock fa-fw"></i> Configure OpenVPN</a>
+              </li>
+              <?php endif; ?>
+              <?php if ( RASPI_TORPROXY_ENABLED ) : ?>
+              <li>
+                 <a href="index.php?page=torproxy_conf"><i class="fa fa-eye-slash fa-fw"></i> Configure TOR proxy</a>
+              </li>
+              <?php endif; ?>
+              <?php if ( RASPI_CONFAUTH_ENABLED ) : ?>
+              <li>
+                <a href="index.php?page=auth_conf"><i class="fa fa-lock fa-fw"></i> Configure Auth</a>
+              </li>
+              <?php endif; ?>
+              <?php if ( RASPI_CHANGETHEME_ENABLED ) : ?>
+              <li>
+                <a href="index.php?page=theme_conf"><i class="fa fa-wrench fa-fw"></i> Change Theme</a>
+              </li>
+              <?php endif; ?>
+              <li>
+                 <a href="index.php?page=system_info"><i class="fa fa-cube fa-fw"></i> System</a>
+              </li>
+              <li>
+                 <a href="index.php?page=url"><i class="fa fa-cube fa-fw"></i> Bootup URL</a>
+              </li>
 
+            </ul>
+          </div><!-- /.navbar-collapse -->
+        </div><!-- /.navbar-default -->
+      </nav>
+
+      <div id="page-wrapper">
+
+        <!-- Page Heading -->
+        <div class="row">
+          <div class="col-lg-12">
+            <h1 class="page-header">
+              <img class="logo" src="img/raspAP-logo.png" width="45" height="45">RaspAP
+            </h1>
+          </div>
+        </div><!-- /.row -->
+
+        <?php 
+        // handle page actions
+        switch( $page ) {
+          case "wlan0_info":
+            DisplayDashboard();
+            break;
+          case "dhcpd_conf":
+            DisplayDHCPConfig();
+            break;
+          case "wpa_conf":
+            DisplayWPAConfig();
+            break;
+          case "network_conf":
+            DisplayNetworkingConfig();
+            break;
+          case "hostapd_conf":
+            DisplayHostAPDConfig();
+            break;
+          case "openvpn_conf":
+            DisplayOpenVPNConfig();
+            break;
+          case "torproxy_conf":
+            DisplayTorProxyConfig();
+            break;
+          case "auth_conf":
+            DisplayAuthConfig($config['admin_user'], $config['admin_pass']);
+            break;
+          case "save_hostapd_conf":
+            SaveTORAndVPNConfig();
+            break;
+          case "theme_conf":
+            DisplayThemeConfig();
+            break;
+          case "system_info":
+            DisplaySystem();
+            break;
+          case "url":
+            DisplayUrl();
+            break;
+          default:
+            DisplayDashboard();
+        }
+        ?>
+      </div><!-- /#page-wrapper --> 
+    </div><!-- /#wrapper -->
+
+    <!-- RaspAP JavaScript -->
+    <script src="dist/js/functions.js"></script>
+
+    <!-- jQuery -->
+    <script src="vendor/jquery/jquery.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+
+    <!-- Metis Menu Plugin JavaScript -->
+    <script src="vendor/metisMenu/metisMenu.min.js"></script>
+
+    <!-- Morris Charts JavaScript -->
+    <!--script src="vendor/raphael/raphael-min.js"></script-->
+    <!--script src="vendor/morrisjs/morris.min.js"></script-->
+    <!--script src="js/morris-data.js"></script-->
+
+    <!-- Custom Theme JavaScript -->
+    <script src="dist/js/sb-admin-2.js"></script>
+
+    <!-- Custom RaspAP JS -->
+    <script src="js/custom.js"></script>
+  </body>
 </html>
