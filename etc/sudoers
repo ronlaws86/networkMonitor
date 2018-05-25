@@ -1,0 +1,58 @@
+#
+# This file MUST be edited with the 'visudo' command as root.
+#
+# Please consider adding local content in /etc/sudoers.d/ instead of
+# directly modifying this file.
+#
+# See the man page for details on how to write a sudoers file.
+#
+Defaults	env_reset
+Defaults	mail_badpass
+Defaults	secure_path="/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"
+
+# Host alias specification
+
+# User alias specification
+
+# Cmnd alias specification
+
+# User privilege specification
+root	ALL=(ALL:ALL) ALL
+
+# Allow members of group sudo to execute any command
+%sudo	ALL=(ALL:ALL) ALL
+
+# See sudoers(5) for more information on "#include" directives:
+
+#includedir /etc/sudoers.d
+
+www-data ALL=(ALL) NOPASSWD:/sbin/ifdown
+www-data ALL=(ALL) NOPASSWD:/sbin/ifup
+www-data ALL=(ALL) NOPASSWD:/bin/cat /etc/wpa_supplicant/wpa_supplicant.conf
+www-data ALL=(ALL) NOPASSWD:/bin/cat /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
+www-data ALL=(ALL) NOPASSWD:/bin/cat /etc/wpa_supplicant/wpa_supplicant-wlan1.conf
+www-data ALL=(ALL) NOPASSWD:/bin/cp /tmp/wifidata /etc/wpa_supplicant/wpa_supplicant.conf
+www-data ALL=(ALL) NOPASSWD:/bin/cp /tmp/wifidata /etc/wpa_supplicant/wpa_supplicant-wlan0.conf
+www-data ALL=(ALL) NOPASSWD:/bin/cp /tmp/wifidata /etc/wpa_supplicant/wpa_supplicant-wlan1.conf
+www-data ALL=(ALL) NOPASSWD:/sbin/wpa_cli -i wlan0 scan_results
+www-data ALL=(ALL) NOPASSWD:/sbin/wpa_cli -i wlan0 scan
+www-data ALL=(ALL) NOPASSWD:/sbin/wpa_cli reconfigure
+www-data ALL=(ALL) NOPASSWD:/bin/cp /tmp/hostapddata /etc/hostapd/hostapd.conf
+www-data ALL=(ALL) NOPASSWD:/etc/init.d/hostapd start
+www-data ALL=(ALL) NOPASSWD:/etc/init.d/hostapd stop
+www-data ALL=(ALL) NOPASSWD:/etc/init.d/dnsmasq start
+www-data ALL=(ALL) NOPASSWD:/etc/init.d/dnsmasq stop
+www-data ALL=(ALL) NOPASSWD:/bin/cp /tmp/dhcpddata /etc/dnsmasq.conf
+www-data ALL=(ALL) NOPASSWD:/sbin/shutdown -h now
+www-data ALL=(ALL) NOPASSWD:/sbin/reboot
+www-data ALL=(ALL) NOPASSWD:/sbin/ip link set wlan0 down
+www-data ALL=(ALL) NOPASSWD:/sbin/ip link set wlan0 up
+www-data ALL=(ALL) NOPASSWD:/sbin/ip -s a f label wlan0
+www-data ALL=(ALL) NOPASSWD:/sbin/ip link set wlan1 down
+www-data ALL=(ALL) NOPASSWD:/sbin/ip link set wlan1 up
+www-data ALL=(ALL) NOPASSWD:/sbin/ip -s a f label wlan1
+www-data ALL=(ALL) NOPASSWD:/bin/cp /etc/raspap/networking/dhcpcd.conf /etc/dhcpcd.conf
+www-data ALL=(ALL) NOPASSWD:/etc/raspap/hostapd/enablelog.sh
+www-data ALL=(ALL) NOPASSWD:/etc/raspap/hostapd/disablelog.sh
+www-data ALL=(ALL) NOPASSWD:/usr/bin/killall
+www-data ALL=(ALL) NOPASSWD:/bin/hostname
