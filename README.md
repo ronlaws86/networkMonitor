@@ -13,7 +13,8 @@ You can use tinyfilemanager.php to make changes to the required files from a bro
 
 https://drive.google.com/open?id=1xryLpERHbVmwJDf3opCyamX0atkwWD_8
 
-Please note an 8GB or larger SD Card is required.
+Please note an 8GB or larger SD Card is required. - I recommend Etcher to flash this image to cards, it can read the image in it's provided gzip file state (No extracting needed!)
+Download Etcher here - https://etcher.io/
 
 Default passwords are in use, please change them if you plan to put this in to production, it is considered stable and production ready.
 
