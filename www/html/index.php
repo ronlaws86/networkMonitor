@@ -71,7 +71,7 @@
 						<div id="31"></div>
 						<div id="32"></div>
 						<div id="33"></div>
-						                
+						<div id="34"></div>                
 						<!-- End Hosts -->
 					</div>
 					</div>
@@ -86,8 +86,7 @@
 						<div id="41"></div>
 						<div id="42"></div>
 						<div id="43"></div>
-						
-						                
+						<div id="44"></div>             
 						<!-- End Hosts -->
 					</div>
 					</div>
@@ -104,7 +103,7 @@
 						<div id="52a"></div>
 						<div id="53a"></div>
 						<div id="54a"></div>
-
+						<div id="55a"></div>
 						<!-- End Hosts -->							
 						</div>
 						<div class="col-md-3">
@@ -125,7 +124,6 @@
 						<div id="53c"></div>
 						<div id="54c"></div>
 						<div id="55c"></div>
-                        <div id="56c"></div>
 
 						<!-- End Hosts -->
 						</div>
@@ -150,39 +148,39 @@
 	<script src="assets/js/custom.js"></script>
 	<script type="text/javascript">
 		$(document).ready(function() {
-// Create two variable with the names of the months and days in an array
-var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]; 
-var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
+		// Create two variable with the names of the months and days in an array
+		var monthNames = [ "January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December" ]; 
+		var dayNames= ["Sunday","Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"]
 
-// Create a newDate() object
-setInterval( function() {
-	var newDate = new Date();
-	// Extract the current date from Date object
-	newDate.setDate(newDate.getDate());
-	// Output the day, date, month and year   
-	$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
-	},1000);
-setInterval( function() {
-	// Create a newDate() object and extract the seconds of the current time on the visitor's
-	var seconds = new Date().getSeconds();
-	// Add a leading zero to seconds value
-	$("#sec").html(( seconds < 10 ? "0" : "" ) + seconds);
-	},1000);
+		// Create a newDate() object
+		setInterval( function() {
+			var newDate = new Date();
+			// Extract the current date from Date object
+			newDate.setDate(newDate.getDate());
+			// Output the day, date, month and year   
+			$('#Date').html(dayNames[newDate.getDay()] + " " + newDate.getDate() + ' ' + monthNames[newDate.getMonth()] + ' ' + newDate.getFullYear());
+			},1000);
+		setInterval( function() {
+			// Create a newDate() object and extract the seconds of the current time on the visitor's
+			var seconds = new Date().getSeconds();
+			// Add a leading zero to seconds value
+			$("#sec").html(( seconds < 10 ? "0" : "" ) + seconds);
+			},1000);
 	
-setInterval( function() {
-	// Create a newDate() object and extract the minutes of the current time on the visitor's
-	var minutes = new Date().getMinutes();
-	// Add a leading zero to the minutes value
-	$("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
-    },1000);
+		setInterval( function() {
+			// Create a newDate() object and extract the minutes of the current time on the visitor's
+			var minutes = new Date().getMinutes();
+			// Add a leading zero to the minutes value
+			$("#min").html(( minutes < 10 ? "0" : "" ) + minutes);
+   		 },1000);
 	
-setInterval( function() {
-	// Create a newDate() object and extract the hours of the current time on the visitor's
-	var hours = new Date().getHours();
-	// Add a leading zero to the hours value
-	$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
-    }, 1000);	
-});
+		setInterval( function() {
+			// Create a newDate() object and extract the hours of the current time on the visitor's
+			var hours = new Date().getHours();
+			// Add a leading zero to the hours value
+			$("#hours").html(( hours < 10 ? "0" : "" ) + hours);
+  		  }, 1000);	
+		});
 	</script>
 </body>
 
