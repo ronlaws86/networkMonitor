@@ -2,6 +2,17 @@
 
 A simplistic, PHP based Network Status monitoring display board designed to be simple to read and easy to use. the goal is to be very easy to deploy, needing minimal skill in order to set up and simplistic in its function as a simple status tool for monitoring multiple devices (such as servers, routers etc.) across a network, displaying if they are online or not. 
 
+# Adding Hosts 
+To add hosts to your monitor, For now you need to edit a JS file under [webroot]/assets/js/custom.js
+
+change one of the lines that look like this 
+$('#14').load('host.php?ip=#&name=#');
+
+to look like this
+$('#14').load('host.php?ip=1.2.3.4&name=DisplayNameOfHost');
+
+
+
 # RASBERRY PI 2 and 3 
 Rasbian Release is based off a few combined projects over the top of the stock Rasbian Image.
 TinyFM - https://github.com/prasathmani/tinyfilemanager
