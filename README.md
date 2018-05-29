@@ -14,7 +14,9 @@ to look like this
 
 $('#14').load('host.php?ip=1.2.3.4&name=DisplayNameOfHost');
 
+To change the names of the columns, you will need to edit the HTML in index.php. 
 
+A user friendly way of doing this is planned for a future release among some other awesome features and optimisations.
 
 # RASBERRY PI 2 and 3 
 Rasbian Release is based off a few combined projects over the top of the stock Rasbian Image.
