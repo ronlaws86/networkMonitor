@@ -11,7 +11,7 @@ This image of rasbian is pre-configured to launch Chromium in Kiosk mode for use
 
 You can use tinyfilemanager.php to make changes to the required files from a browser if you wish, more detailed instructions are given on screen at first boot.
 
-https://drive.google.com/open?id=1YtP485ecLrdE1P1ANC2kB0UWgOAULPdh
+https://drive.google.com/open?id=1xryLpERHbVmwJDf3opCyamX0atkwWD_8
 
 Please note an 8GB or larger SD Card is required.
 
