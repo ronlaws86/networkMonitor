@@ -6,9 +6,12 @@ A simplistic, PHP based Network Status monitoring display board designed to be s
 To add hosts to your monitor, For now you need to edit a JS file under [webroot]/assets/js/custom.js
 
 change one of the lines that look like this 
+
 $('#14').load('host.php?ip=#&name=#');
 
+
 to look like this
+
 $('#14').load('host.php?ip=1.2.3.4&name=DisplayNameOfHost');
 
 
