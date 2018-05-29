@@ -1,23 +1,21 @@
-
-
 var audio = {};
-audio["alarm"] = new Audio();
-audio["alarm"].src = "/assets/sounds/alarm3.mp3"
-audio["alarm"].addEventListener('load', function() {
-audio["alarm"].play();
+	audio["alarm"] = new Audio();
+	audio["alarm"].src = "/assets/sounds/alarm3.mp3"
+	audio["alarm"].addEventListener('load', function() {
+	audio["alarm"].play();
 });
-  // audio["alarm"].play();
 
-var colSite1 = setInterval(pingHosts, 5000);
-function pingHosts () {
+var colSite1 = setInterval(pingHostsSite1, 5000);
+function pingHostsSite1 () {
 	//Site 1
 	$('#11').load('host.php?ip=8.8.8.8&name=Google%20DNS');
 	$('#12').load('host.php?ip=#&name=#');
 	$('#13').load('host.php?ip=#&name=#');
 	$('#14').load('host.php?ip=#&name=#');
 }
-var colSite2 = setInterval(pingHosts, 5000);
-function pingHosts () {
+
+var colSite2 = setInterval(pingHostsSite2, 5000);
+function pingHostsSite2 () {
 	//Site 2
 	$('#21').load('host.php?ip=8.8.4.4&name=Google%20DNS');
 	$('#22').load('host.php?ip=#&name=#');
@@ -25,8 +23,8 @@ function pingHosts () {
 	$('#24').load('host.php?ip=#&name=#');
 }
 
-var colSite3 = setInterval(pingHosts, 5000);
-function pingHosts () {
+var colSite3 = setInterval(pingHostsSite3, 5000);
+function pingHostsSite3 () {
 	//Site 3
 	$('#31').load('host.php?ip=#&name=#');
 	$('#32').load('host.php?ip=#&name=#');
@@ -34,8 +32,8 @@ function pingHosts () {
 	$('#34').load('host.php?ip=#&name=#');
 }
 
-var colSite4 = setInterval(pingHosts, 5000);
-function pingHosts () {
+var colSite4 = setInterval(pingHostsSite4, 5000);
+function pingHostsSite4 () {
 	//Site 4
 	$('#41').load('host.php?ip=#&name=#');
 	$('#42').load('host.php?ip=#&name=#');
@@ -43,8 +41,8 @@ function pingHosts () {
 	$('#44').load('host.php?ip=#&name=#');
 }
 
-var colSite5 = setInterval(pingHosts, 5000);
-function pingHosts () {
+var colSite5 = setInterval(pingHostsSite5, 5000);
+function pingHostsSite5 () {
 	//Site 5 (large)
 
 	//col 1
@@ -75,7 +73,6 @@ function pingHosts () {
 	$('#54d').load('host.php?ip=#&name=#');
 	$('#55d').load('host.php?ip=#&name=#');
 
-
 }
 
 var timeout = setInterval(checkState, 15000);
@@ -92,4 +89,3 @@ function checkState () {
 
     }
 }
-
